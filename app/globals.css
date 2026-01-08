@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary: #1e293b;
+    --accent: #4f46e5;
+    --background: #ffffff;
+    --foreground: #0f172a;
+}
+
+body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: var(--font-cairo), sans-serif;
+}
+
+.font-arabic {
+    font-family: var(--font-cairo), sans-serif;
+}
+
+@layer base {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-bold text-slate-900;
+    }
+}
+
+.btn-primary {
+    @apply bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200 flex items-center justify-center gap-2;
+}
+
+.btn-secondary {
+    @apply border border-slate-200 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors duration-200 flex items-center justify-center gap-2;
+}
+
+.input-field {
+    @apply block w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-right;
+}
+
+.card {
+    @apply bg-white p-6 rounded-xl border border-slate-100 shadow-sm;
+}
