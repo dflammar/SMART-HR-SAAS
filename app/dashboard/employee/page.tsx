@@ -92,7 +92,9 @@ export default function EmployeeDashboard() {
     const handleScanSuccess = async (qrData: string) => {
         setScanning(false);
         try {
-            const payload = JSON.parse(atob(qrData));
+            // Unicode-safe Base64 decoding
+            const decoded = decodeURIComponent(escape(atob(qrData)));
+            const payload = JSON.parse(decoded);
             const diff = (Date.now() - payload.t) / 1000;
 
             if (diff > 90 || payload.tid !== profile.tenantId) {
@@ -147,8 +149,8 @@ export default function EmployeeDashboard() {
 
                 {/* Current Status */}
                 <div className={`px-8 py-4 rounded-2xl text-center ${currentStatus === 'in'
-                        ? 'bg-green-100 border-2 border-green-300'
-                        : 'bg-slate-200 border-2 border-slate-300'
+                    ? 'bg-green-100 border-2 border-green-300'
+                    : 'bg-slate-200 border-2 border-slate-300'
                     }`}>
                     <p className="text-sm text-slate-600 mb-1">الحالة الآن</p>
                     <p className={`text-2xl font-black ${currentStatus === 'in' ? 'text-green-600' : 'text-slate-600'}`}>
@@ -183,8 +185,8 @@ export default function EmployeeDashboard() {
                     <button
                         onClick={startScanner}
                         className={`w-full max-w-sm py-6 rounded-3xl font-black text-xl flex items-center justify-center gap-3 shadow-2xl transition-all ${currentStatus === 'in'
-                                ? 'bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white shadow-red-500/30'
-                                : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-green-500/30'
+                            ? 'bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white shadow-red-500/30'
+                            : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-green-500/30'
                             }`}
                     >
                         <Camera className="h-8 w-8" />
@@ -195,8 +197,8 @@ export default function EmployeeDashboard() {
                 {/* Status Message */}
                 {status.type !== 'idle' && (
                     <div className={`w-full max-w-sm p-4 rounded-2xl text-center font-bold ${status.type === 'success'
-                            ? 'bg-green-100 text-green-700 border border-green-300'
-                            : 'bg-red-100 text-red-700 border border-red-300'
+                        ? 'bg-green-100 text-green-700 border border-green-300'
+                        : 'bg-red-100 text-red-700 border border-red-300'
                         }`}>
                         {status.type === 'success' ? (
                             <CheckCircle2 className="h-6 w-6 mx-auto mb-2" />

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { getUserProfile, getMonthlyPayrollData } from "@/lib/firestore";
 import { useRouter } from "next/navigation";
 import { Calculator, DollarSign, Clock, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 
 export default function PayrollPage() {
@@ -23,6 +24,33 @@ export default function PayrollPage() {
                     router.push("/dashboard/employee");
                     return;
                 }
+
+                // Check subscription status
+                if (userProfile.tenantId) {
+                    const tenantDoc = await getDoc(doc(db, "tenants", userProfile.tenantId));
+                    if (tenantDoc.exists()) {
+                        const tenantData = tenantDoc.data();
+                        if (!tenantData.isActive) {
+                            router.push("/dashboard/company");
+                            return;
+                        }
+                        if (tenantData.activatedAt) {
+                            const activatedAt = tenantData.activatedAt?.toDate?.() || new Date(tenantData.activatedAt);
+                            const expiresAt = new Date(activatedAt.getTime() + 30 * 24 * 60 * 60 * 1000);
+                            if (new Date() > expiresAt) {
+                                router.push("/dashboard/company");
+                                return;
+                            }
+                        } else {
+                            router.push("/dashboard/company");
+                            return;
+                        }
+                    } else {
+                        router.push("/dashboard/company");
+                        return;
+                    }
+                }
+
                 setProfile(userProfile);
                 loadPayroll(userProfile.tenantId!, selectedYear, selectedMonth);
             } else {
@@ -123,7 +151,7 @@ export default function PayrollPage() {
                             <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded">نشط</span>
                         </div>
                         <p className="text-sm text-slate-500">إجمالي الرواتب</p>
-                        <p className="text-2xl font-black text-slate-900">{totalSalary.toFixed(2)} ر.س</p>
+                        <p className="text-2xl font-black text-slate-900">{totalSalary.toFixed(2)} ج.م</p>
                     </div>
 
                     <div className="card bg-white">
@@ -184,10 +212,10 @@ export default function PayrollPage() {
                                                 {item.hoursWorked} س
                                             </span>
                                         </td>
-                                        <td className="p-4 text-slate-600">{item.hourlyRate} ر.س</td>
+                                        <td className="p-4 text-slate-600">{item.hourlyRate} ج.م</td>
                                         <td className="p-4">
                                             <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg font-bold">
-                                                {item.totalSalary.toFixed(2)} ر.س
+                                                {item.totalSalary.toFixed(2)} ج.م
                                             </span>
                                         </td>
                                     </tr>
@@ -204,7 +232,7 @@ export default function PayrollPage() {
                                     <td className="p-4"></td>
                                     <td className="p-4">
                                         <span className="px-3 py-1 bg-indigo-600 text-white rounded-lg font-bold text-lg">
-                                            {totalSalary.toFixed(2)} ر.س
+                                            {totalSalary.toFixed(2)} ج.م
                                         </span>
                                     </td>
                                 </tr>

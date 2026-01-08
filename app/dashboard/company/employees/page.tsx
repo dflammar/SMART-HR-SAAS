@@ -6,6 +6,7 @@ import { getUserProfile, getEmployeesByTenant, addEmployee, updateEmployee, dele
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { Users, Plus, Edit2, Trash2, X, Loader2, ArrowRight } from "lucide-react";
+import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 
 export default function EmployeesPage() {
@@ -32,6 +33,34 @@ export default function EmployeesPage() {
                     router.push("/login");
                     return;
                 }
+
+                // Check subscription status
+                if (userProfile.tenantId) {
+                    const tenantDoc = await getDoc(doc(db, "tenants", userProfile.tenantId));
+                    if (tenantDoc.exists()) {
+                        const tenantData = tenantDoc.data();
+                        if (!tenantData.isActive) {
+                            router.push("/dashboard/company");
+                            return;
+                        }
+                        // Check 30-day expiry
+                        if (tenantData.activatedAt) {
+                            const activatedAt = tenantData.activatedAt?.toDate?.() || new Date(tenantData.activatedAt);
+                            const expiresAt = new Date(activatedAt.getTime() + 30 * 24 * 60 * 60 * 1000);
+                            if (new Date() > expiresAt) {
+                                router.push("/dashboard/company");
+                                return;
+                            }
+                        } else {
+                            router.push("/dashboard/company");
+                            return;
+                        }
+                    } else {
+                        router.push("/dashboard/company");
+                        return;
+                    }
+                }
+
                 setProfile(userProfile);
                 loadEmployees(userProfile.tenantId!);
             } else {
@@ -169,7 +198,7 @@ export default function EmployeesPage() {
                             <div className="space-y-2 mb-4">
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm text-slate-500">الأجر بالساعة:</span>
-                                    <span className="font-bold text-indigo-600">{employee.hourlyRate} ر.س</span>
+                                    <span className="font-bold text-indigo-600">{employee.hourlyRate} ج.م</span>
                                 </div>
                             </div>
 
@@ -273,7 +302,7 @@ export default function EmployeesPage() {
 
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">
-                                    الأجر بالساعة (ر.س)
+                                    الأجر بالساعة (ج.م)
                                 </label>
                                 <input
                                     type="number"

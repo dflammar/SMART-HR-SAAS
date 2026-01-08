@@ -158,8 +158,8 @@ export default function AdminDashboard() {
                     <button
                         onClick={() => setActiveTab('codes')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'codes'
-                                ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
-                                : 'hover:bg-slate-800 text-slate-400'
+                            ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
+                            : 'hover:bg-slate-800 text-slate-400'
                             }`}
                     >
                         <Ticket className="h-5 w-5" />
@@ -169,8 +169,8 @@ export default function AdminDashboard() {
                     <button
                         onClick={() => setActiveTab('companies')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'companies'
-                                ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
-                                : 'hover:bg-slate-800 text-slate-400'
+                            ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
+                            : 'hover:bg-slate-800 text-slate-400'
                             }`}
                     >
                         <Building2 className="h-5 w-5" />
@@ -218,10 +218,10 @@ export default function AdminDashboard() {
                                         <p className="text-2xl font-mono font-black text-white mb-3">{code.id}</p>
                                         <div className="flex items-center justify-between">
                                             <span className={`px-2 py-1 rounded text-xs font-bold ${isCodeExpired(code)
-                                                    ? 'bg-red-500/20 text-red-400'
-                                                    : code.used
-                                                        ? 'bg-yellow-500/20 text-yellow-400'
-                                                        : 'bg-green-500/20 text-green-400'
+                                                ? 'bg-red-500/20 text-red-400'
+                                                : code.used
+                                                    ? 'bg-yellow-500/20 text-yellow-400'
+                                                    : 'bg-green-500/20 text-green-400'
                                                 }`}>
                                                 {isCodeExpired(code) ? 'منتهي' : code.used ? 'مستخدم' : 'صالح'}
                                             </span>
@@ -364,7 +364,7 @@ export default function AdminDashboard() {
                                             <DollarSign className="h-5 w-5 text-yellow-400" />
                                             <span className="text-slate-400 text-sm">إجمالي الرواتب (هذا الشهر)</span>
                                         </div>
-                                        <p className="text-3xl font-bold">{totalPayroll.toFixed(2)} ر.س</p>
+                                        <p className="text-3xl font-bold">{totalPayroll.toFixed(2)} ج.م</p>
                                     </div>
                                 </div>
 
@@ -403,9 +403,9 @@ export default function AdminDashboard() {
                                                             </div>
                                                         </td>
                                                         <td className="py-3 px-4 text-slate-400 text-sm" dir="ltr">{emp.email}</td>
-                                                        <td className="py-3 px-4 text-center">{emp.hourlyRate} ر.س</td>
+                                                        <td className="py-3 px-4 text-center">{emp.hourlyRate} ج.م</td>
                                                         <td className="py-3 px-4 text-center text-green-400">{emp.hoursWorked?.toFixed(1) || 0}</td>
-                                                        <td className="py-3 px-4 text-center font-bold text-yellow-400">{emp.totalSalary?.toFixed(2) || 0} ر.س</td>
+                                                        <td className="py-3 px-4 text-center font-bold text-yellow-400">{emp.totalSalary?.toFixed(2) || 0} ج.م</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -413,7 +413,7 @@ export default function AdminDashboard() {
                                                 <tr>
                                                     <td colSpan={3} className="py-3 px-4 font-bold">الإجمالي</td>
                                                     <td className="py-3 px-4 text-center font-bold text-green-400">{totalHours.toFixed(1)}</td>
-                                                    <td className="py-3 px-4 text-center font-bold text-yellow-400">{totalPayroll.toFixed(2)} ر.س</td>
+                                                    <td className="py-3 px-4 text-center font-bold text-yellow-400">{totalPayroll.toFixed(2)} ج.م</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
